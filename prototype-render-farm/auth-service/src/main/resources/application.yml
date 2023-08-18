@@ -1,0 +1,54 @@
+server:
+  port: 0
+
+spring:
+
+  application:
+    name: auth-service
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/auth_db
+
+  security:
+    oauth2:
+      client:
+        registration:
+          oauth2-client-credentials:
+            client-id: spring-cloud-client
+            client-secret: Rzd44YWyvMDyNXgoAAQqnBDwHcrdb0Vf
+            scope: openid, profile, roles
+            authorization-grant-type: password
+            provider: keycloak
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/prototype-render-farm-realm
+            token-uri: http://localhost:8080/realms/prototype-render-farm-realm/protocol/openid-connect/token
+
+keycloak:
+  realm: auth-realm
+  resource: auth-client
+  auth-server-url: http://localhost:8180/auth
+  ssl-required: external
+  public-client: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka/
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans/
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
+logging:
+  level:
+    org.springframework.web: DEBUG

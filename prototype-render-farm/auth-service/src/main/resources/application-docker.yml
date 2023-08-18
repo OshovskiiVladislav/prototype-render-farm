@@ -1,0 +1,25 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/auth_db
+
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://keycloak:8080/realms/prototype-render-farm-realm
+            token-uri: http://keycloak:8080/realms/prototype-render-farm-realm/protocol/openid-connect/token
+
+keycloak:
+  auth-server-url: http://keycloak:8180/auth
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@discovery-server:8761/eureka
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411

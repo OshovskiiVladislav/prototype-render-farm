@@ -1,0 +1,61 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: client-prototype-render-farm
+
+prototype:
+  render:
+    farm:
+      url: "http://server-prototype-render-farm/api/v1"
+      endpoints:
+        tasks: "${prototype.render.farm.url}/tasks"
+        tasks-by-username: "${prototype.render.farm.url}/tasks/username"
+
+auth:
+  service:
+    url: "http://auth-service/api/v1/"
+    endpoints:
+      login: "${auth.service.url}/auth/login"
+      logout: "${auth.service.url}/auth/logout"
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    web:
+      exposure:
+        include: prometheus
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans/
+  tracing:
+    sampling:
+      probability: 1
+
+#Resilinece4j Properties
+resilience4j:
+  circuitbreaker:
+    instances:
+      render-farm:
+        registerHealthIndicator: true
+        event-consumer-buffer-size: 10
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true

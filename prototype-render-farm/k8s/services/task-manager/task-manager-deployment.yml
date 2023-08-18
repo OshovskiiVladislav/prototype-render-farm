@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: task-manager
+  name: task-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-manager
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: task-manager
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: vlad43590/task-manager:latest
+          name: task-manager
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: task-manager
+  name: task-manager
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 9194
+  selector:
+    app: task-manager
+status:
+  loadBalancer: {}

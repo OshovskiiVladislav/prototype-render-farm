@@ -1,0 +1,38 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: server-prototype-render-farm
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DATASOURCE_HOST:localhost}:5432/render_farm_db
+    username: connector
+    password: postgres
+
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      client-id: groupId
+    consumer:
+      group-id: groupId
+    listener:
+      concurrency: 1
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka/
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans/
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: prometheus

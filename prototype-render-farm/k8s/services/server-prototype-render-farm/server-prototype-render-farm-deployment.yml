@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: server-prototype-render-farm
+  name: server-prototype-render-farm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server-prototype-render-farm
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: server-prototype-render-farm
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: vlad43590/server-prototype-render-farm:latest
+          name: server-prototype-render-farm
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: server-prototype-render-farm
+  name: server-prototype-render-farm
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 9193
+  selector:
+    app: server-prototype-render-farm
+status:
+  loadBalancer: {}

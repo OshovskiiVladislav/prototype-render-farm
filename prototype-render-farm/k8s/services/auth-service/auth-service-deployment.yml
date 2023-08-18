@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth-service
+  name: auth-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: vlad43590/auth-service:latest
+          name: auth-service
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: auth-service
+  name: auth-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 9192
+  selector:
+    app: auth-service
+status:
+  loadBalancer: {}

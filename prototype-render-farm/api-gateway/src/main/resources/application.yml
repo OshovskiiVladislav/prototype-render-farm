@@ -1,0 +1,76 @@
+server:
+  port: 8081
+
+spring:
+
+  main:
+    allow-bean-definition-overriding: true
+
+  application:
+    name: api-gateway
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://localhost:8080/realms/prototype-render-farm-realm"
+
+  cloud:
+    gateway:
+
+      observability:
+        enabled: false
+
+      routes:
+        - id: server-prototype-render-farm
+          uri: lb://server-prototype-render-farm
+          predicates:
+            - Path=/api/*/tasks,/api/*/tasks/**
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/*/userextras,/api/*/userextras/**,/api/*/auth,/api/*/auth/**
+        - id: discovery-server
+          uri: http://eureka:password@${app.eureka-server}:8761
+          predicates:
+            - Path=/eureka/web
+          filters:
+            - SetPath=/
+        - id: discovery-server-static
+          uri: http://eureka:password@${app.eureka-server}:8761
+          predicates:
+            - Path=/eureka/**
+
+app:
+  eureka-server: localhost
+  cors:
+    allowed-origins: http://localhost:3000
+
+jwt:
+  auth:
+    converter:
+      resource-id: server-prototype-render-farm
+      client-id: spring-cloud-client
+      principal-attribute: preferred_username
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans/
+      sampling:
+        probability: 1.0
+    endpoints:
+      web:
+        exposure:
+          include: prometheus
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+

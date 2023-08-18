@@ -1,0 +1,29 @@
+global:
+  scrape_interval:     10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'client-prototype-render-farm'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['client-prototype-render-farm:8080']
+        labels:
+          application: 'Client Prototype Render Farm'
+  - job_name: 'server-prototype-render-farm'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['server-prototype-render-farm:8080']
+        labels:
+          application: 'Server Prototype Render Farm'
+  - job_name: 'task-manager'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['task-manager:8080']
+        labels:
+          application: 'Task Manager'
+  - job_name: 'auth-service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'auth-service:8080' ]
+        labels:
+          application: 'Auth Service'
