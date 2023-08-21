@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface ShellTask {
     TaskDto createTask(String title, String type);
-    List<TaskDto> findAll();
     List<TaskDto> findAllByUsername();
 }
