@@ -5,8 +5,6 @@ import com.oshovskii.client.shell.interfaces.ShellAuth;
 import com.oshovskii.client.shell.interfaces.ShellTask;
 import com.oshovskii.client.tasks.TaskTypeHandler;
 import com.oshovskii.common.dto.TaskDto;
-import com.oshovskii.common.dto.enums.TaskType;
-import com.oshovskii.common.exceptions.implementations.ResourceNotFoundException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +18,6 @@ import org.springframework.shell.standard.ShellOption;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.lang.String.format;
 
 @Slf4j
 @ShellComponent
@@ -44,14 +36,6 @@ public class ShellTaskImpl implements ShellTask {
 
     @Value("${prototype.render.farm.endpoints.tasks-by-username}")
     private String prototypeRenderFarmTasksByUsernameEndpoints;
-
-    public ShellTaskImpl(WebClient.Builder webClientBuilder,
-                         ShellAuth shellAuth, List<TaskTypeHandler> listTaskTypeHandlers) {
-        this.webClientBuilder = webClientBuilder;
-        this.shellAuth = shellAuth;
-        this.typeTaskTypeHandlerMap = listTaskTypeHandlers.stream()
-                .collect(Collectors.toMap(TaskTypeHandler::getType, Function.identity()));
-    }
 
     @Override
     @ShellMethodAvailability(value = "isPublishEventCommandAvailable")
